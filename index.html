@@ -247,7 +247,7 @@
                 const melhor = previsoes.reduce((anterior, atual) =>
                     atual.probability > anterior.probability ? atual : anterior
                 );
-                jogo(melhor.probability >= 0.8 ? melhor.className : "indefinido");
+                jogo(melhor.probability >= 0.9 ? melhor.className : "indefinido");
             } catch (falha) {
                 console.error(falha);
                 ativarModoTeclado();
