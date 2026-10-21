@@ -76,6 +76,8 @@
         let faseVitoria = "jogo";
         let tempoFaseVitoria = 0;
         const duracaoEntradaFlutter = 0.9;
+        const LIMIAR_CONFIANCA_GESTO = 0.9;
+        const LIMIAR_CONFIANCA_NEUTRO = 0.6;
         let tempoAnterior = 0;
         let tempoAnimacao = 0;
         let tempoProximoObstaculo = 0.8;
@@ -247,7 +249,9 @@
                 const melhor = previsoes.reduce((anterior, atual) =>
                     atual.probability > anterior.probability ? atual : anterior
                 );
-                jogo(melhor.probability >= 0.9 ? melhor.className : "indefinido");
+                const classe = normalizarGesto(melhor.className);
+                const limiar = classe === "neutro" ? LIMIAR_CONFIANCA_NEUTRO : LIMIAR_CONFIANCA_GESTO;
+                jogo(melhor.probability >= limiar ? melhor.className : "indefinido");
             } catch (falha) {
                 console.error(falha);
                 ativarModoTeclado();
@@ -258,8 +262,7 @@
 
         function jogo(gesto) {
             if (vitoria) return;
-            const nome = gesto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-            const novoGesto = nome.includes("pulando") ? "pulando" : nome.includes("baixo") ? "baixo" : nome.includes("neutro") ? "neutro" : "indefinido";
+            const novoGesto = normalizarGesto(gesto);
 
             if (novoGesto !== ultimoGesto && (novoGesto === "pulando" || novoGesto === "baixo")) {
                 if (novoGesto === "pulando" && jogador.salto === 0) {
@@ -274,6 +277,11 @@
             else if (novoGesto === "baixo") mensagem.textContent = "Abaixada!";
             else if (novoGesto === "neutro") mensagem.textContent = "Prepare-se...";
             else mensagem.textContent = "Gesto não identificado";
+        }
+
+        function normalizarGesto(gesto) {
+            const nome = gesto.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+            return nome.includes("pulando") ? "pulando" : nome.includes("baixo") ? "baixo" : nome.includes("neutro") ? "neutro" : "indefinido";
         }
 
         function tratarTecla(evento, pressionada) {
