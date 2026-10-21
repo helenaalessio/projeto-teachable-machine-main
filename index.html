@@ -76,8 +76,8 @@
         let faseVitoria = "jogo";
         let tempoFaseVitoria = 0;
         const duracaoEntradaFlutter = 0.9;
-        const LIMIAR_CONFIANCA_GESTO = 0.9;
-        const LIMIAR_CONFIANCA_NEUTRO = 0.6;
+        const limiarConfiancaGesto = 0.9;
+        const limiarConfiancaNeutro = 0.6;
         let tempoAnterior = 0;
         let tempoAnimacao = 0;
         let tempoProximoObstaculo = 0.8;
@@ -250,7 +250,7 @@
                     atual.probability > anterior.probability ? atual : anterior
                 );
                 const classe = normalizarGesto(melhor.className);
-                const limiar = classe === "neutro" ? LIMIAR_CONFIANCA_NEUTRO : LIMIAR_CONFIANCA_GESTO;
+                const limiar = classe === "neutro" ? limiarConfiancaNeutro : limiarConfiancaGesto;
                 jogo(melhor.probability >= limiar ? melhor.className : "indefinido");
             } catch (falha) {
                 console.error(falha);
