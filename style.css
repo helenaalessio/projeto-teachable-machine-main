@@ -19,6 +19,35 @@ button {
     cursor: inherit;
 }
 
+#controle-musica {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 5;
+    padding: 10px 18px;
+    border: 2px solid rgba(255, 255, 255, .85);
+    border-radius: 50px;
+    background: rgba(255, 179, 237, .92);
+    color: #fff;
+    font-family: 'Comic Sans MS', 'Quicksand', sans-serif;
+    font-size: 15px;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(255, 141, 206, .4);
+    transition: background-color 200ms ease, box-shadow 200ms ease, transform 200ms ease;
+}
+
+#controle-musica:hover,
+#controle-musica:focus-visible {
+    background-color: #f2a3c7;
+    box-shadow: 0 0 14px rgba(255, 255, 255, .8), 0 0 24px rgba(255, 179, 237, .8);
+    transform: translateY(-2px);
+}
+
+#controle-musica:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 3px;
+}
+
 body::before {
     content: "";
     position: fixed;
@@ -316,6 +345,13 @@ canvas {
 }
 
 @media (max-width: 600px) {
+    #controle-musica {
+        top: 10px;
+        right: 10px;
+        padding: 8px 14px;
+        font-size: 14px;
+    }
+
     .game-stage {
         width: 100%;
     }
@@ -328,6 +364,7 @@ canvas {
 @media (prefers-reduced-motion: reduce) {
     .intro,
     .game-stage,
+    #controle-musica,
     .game-heading,
     #game-canvas,
     .webcam-preview,

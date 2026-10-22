@@ -9,6 +9,11 @@
 </head>
 
 <body>
+    <audio id="musica-fundo" src="musica.mp3" loop preload="auto"></audio>
+    <button id="controle-musica" type="button" aria-label="Mutar música de fundo" aria-pressed="false">
+        ♫ Mutar
+    </button>
+
     <main class="app-shell">
         <section id="intro" class="intro" aria-labelledby="titulo">
             <h1 id="titulo">Angelhops</h1>
@@ -56,6 +61,51 @@
         const molduraCanvas = document.querySelector(".canvas-wrap");
         const telaVitoria = document.getElementById("tela-vitoria");
         const botaoReiniciarVitoria = document.getElementById("reiniciar-vitoria");
+        const musicaFundo = document.getElementById("musica-fundo");
+        const controleMusica = document.getElementById("controle-musica");
+
+        musicaFundo.volume = 0.4;
+
+        function atualizarControleMusica() {
+            const silenciada = musicaFundo.muted;
+            const textoControle = silenciada ? "♫ Desmutar" : musicaFundo.paused ? "♫ Ativar música" : "♫ Mutar";
+            controleMusica.textContent = textoControle;
+            controleMusica.setAttribute("aria-label", textoControle.replace("♫ ", "") + " de fundo");
+            controleMusica.setAttribute("aria-pressed", String(silenciada));
+        }
+
+        async function tocarMusica() {
+            try {
+                await musicaFundo.play();
+            } catch (falha) {
+                if (falha.name !== "NotAllowedError") console.error("Não foi possível reproduzir a música.", falha);
+            }
+        }
+
+        function iniciarMusicaComInteracao() {
+            if (musicaFundo.paused) tocarMusica();
+        }
+
+        controleMusica.addEventListener("click", () => {
+            if (musicaFundo.paused) {
+                musicaFundo.muted = false;
+                tocarMusica();
+            } else {
+                musicaFundo.muted = !musicaFundo.muted;
+            }
+            atualizarControleMusica();
+        });
+        musicaFundo.addEventListener("play", atualizarControleMusica);
+        musicaFundo.addEventListener("pause", atualizarControleMusica);
+        musicaFundo.addEventListener("volumechange", atualizarControleMusica);
+        document.addEventListener("pointerdown", evento => {
+            if (!controleMusica.contains(evento.target)) iniciarMusicaComInteracao();
+        }, { once: true });
+        document.addEventListener("keydown", evento => {
+            if (!controleMusica.contains(evento.target)) iniciarMusicaComInteracao();
+        }, { once: true });
+        atualizarControleMusica();
+        tocarMusica();
 
         const imagens = {
             floresta: carregarImagem("floresta.png"),
